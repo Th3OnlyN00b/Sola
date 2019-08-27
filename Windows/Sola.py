@@ -12,6 +12,17 @@ from waits.can_find import can_find
 from ArgsHandler import args_handler
 import logging
 import sys
+using_commands = True
+for arg in sys.argv:
+    arg_bits = arg.split("=")
+    if arg_bits[0].lower() == "message":
+        using_commands = False
+if using_commands:
+    try:
+        import commands
+    except:
+        print("If not using a defined message (see '" + sys.argv[0] + " help') you must have a commands.py file present in the root directory.")
+        quit()
 import traceback
 import time
 import json
@@ -21,12 +32,12 @@ logging.basicConfig(filename='Sola.log', filemode='w', format='%(name)s - %(leve
 print("Logging configured!")
 
 class Sola:
-    def __init__(self, bot_name, email, password, browser_options, dev):
+    def __init__(self, email, password, browser_options, dev, message):
         self.email = email
         self.password = password
-        self.bot_name = bot_name
         self.browser_options = browser_options
         self.dev = dev
+        self.message = message
 
     def setup(self):
         # Select correct browser + options
@@ -69,25 +80,41 @@ class Sola:
                 if self.dev: print(traceback.format_exc())
                 continue
             card_list = self.driver.find_element_by_class_name("CardList__items").find_elements_by_class_name("Card")
-            for card in card_list: # Yes I know a for loop that only ever does one this is stupid don't @me
+            for card in card_list: # Yes I know a for loop that only ever does one card is stupid don't @me
                 card_list = self.driver.find_element_by_class_name("CardList__items").find_elements_by_class_name("Card")
                 room_url_tokens = card.find_element_by_class_name("Card__link").get_attribute("href").split("/")
+                print(card.get_attribute("outerHTML"))
                 if "conversations" in room_url_tokens:
+                    user = card.find_element_by_class_name("Card__title").get_attribute("innerHTML")
+                    link = card.find_element_by_class_name("Card__link").get_attribute("href")
                     card.click()
                     self.select_message_box()
-                    self.send_message("I am out of the office at the moment and will not be returing until 1:30, as I am having lunch! Thanks for helping me test away messages!")
+                    if(self.message != None):
+                        self.send_message(self.message)
+                    else:
+                        self.send_message(commands.process_message_personal(user, link, self.send_message))
                     self.driver.execute_script("window.history.go(-1)")
                     time.sleep(3)
                     break
                 elif ("rooms" in room_url_tokens) and (card.find_element_by_class_name("CardSubtitle__primarySubtitle").get_attribute("innerHTML").split(" ")[0] == "@mentioned"):
+                    room = card.find_element_by_class_name("Card__title").get_attribute("innerHTML")
+                    link = card.find_element_by_class_name("Card__link").get_attribute("href")
                     card.click()
                     self.select_message_box()
-                    self.send_message("I am out of the office at the moment and will not be returing until 1:30, as I am having lunch! Thanks for helping me test away messages!")
+                    if(self.message != None):
+                        self.send_message(self.message)
+                    else:
+                        self.send_message(commands.process_message_group(room, link, self.send_message))
                     self.driver.execute_script("window.history.go(-1)")
                     time.sleep(3)
                     break
                 else:
+                    room = card.find_element_by_class_name("Card__title").get_attribute("innerHTML")
+                    link = card.find_element_by_class_name("Card__link").get_attribute("href")
                     card.click()
+                    self.select_message_box()
+                    if(self.message == None):
+                        self.send_message(commands.process_message_group_no_at(room, link, self.send_message))
                     self.driver.execute_script("window.history.go(-1)")
                     time.sleep(3)
                     break
@@ -183,12 +210,12 @@ info = args_handler(sys.argv)
 
 email = info["email"]
 password = info["password"]
-bot_name = sys.argv[3].split('=')[1]
-browser_options = {"browser": sys.argv[2].lower(), "headless": sys.argv[1]}
+browser_options = {"browser": info["browser"], "headless": info["headless"]}
 dev = info["dev"]
+message = info["message"] if "message" in info else None
 
 #Make our bot
-bot = Sola(bot_name, email, password, browser_options, dev)
+bot = Sola(email, password, browser_options, dev, message)
 
 #while True:
 try:

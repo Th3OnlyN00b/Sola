@@ -242,17 +242,17 @@ message = info["message"] if "message" in info else None
 #Make our bot
 bot = Sola(email, password, browser_options, dev, message)
 
-#while True:
-try:
-    bot.setup()
-    bot.chime_login()
-    bot.find_updates()
-except (KeyboardInterrupt, SystemExit): #Allow users to manually exit
-    quit()
-except:
-    logging.error(traceback.format_exc())
-    try: 
-        bot.driver.quit()
+while True:
+    try:
+        bot.setup()
+        bot.chime_login()
+        bot.find_updates()
+    except (KeyboardInterrupt, SystemExit): #Allow users to manually exit
+        quit()
     except:
-        pass
-    #continue
+        logging.error(traceback.format_exc())
+        try: 
+            bot.driver.quit()
+        except:
+            pass
+        continue

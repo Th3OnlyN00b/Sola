@@ -66,6 +66,28 @@ class Sola:
             print("Could not create driver. Make sure you have installed the browser you're trying to use, have added this root folder to your path, and that you have at least 600 MB of free RAM. See Sola.log for more details on the error.")
             quit()
 
+    def get_info(self):
+        info = {}
+        try:
+            message_list = self.driver.find_element_by_class_name("ChatMessageList.ChatContainer__messagesList").find_element_by_class_name("ChatMessageList__messagesWrapper.ChatMessageList__messagesWrapper--shortReadReceipt")
+            try:
+                messages = message_list.find_elements_by_class_name("ChatMessageList__messageContainer")
+                info["message_sender"] = senders[-1].get_attribute("innerHTML").split("<")[0]
+                info["message_sender_email"] = senders[-1].get_attribute("data-email")
+            except:
+                info["message_sender"] = "Unknown"
+                info["message_sender_email"] = "Unknown"
+            try:
+                senders = message_list.find_elements_by_class_name("ChatMessage__sender")
+                info["message_text"] = messages[-1].find_element_by_class_name("Linkify").get_attribute("innerHTML")
+            except:
+                info["message_text"] = "Unknown"
+        except:
+                info["message_sender"] = "Unknown"
+                info["message_sender_email"] = "Unknown"
+                info["message_text"] = "Unknown"
+        return info
+
     def find_updates(self):
         while True:
             print("Waiting for msg...")
@@ -88,11 +110,12 @@ class Sola:
                     user = card.find_element_by_class_name("Card__title").get_attribute("innerHTML")
                     link = card.find_element_by_class_name("Card__link").get_attribute("href")
                     card.click()
+                    values = self.get_info()
                     self.select_message_box()
                     if(self.message != None):
                         self.send_message(self.message)
                     else:
-                        self.send_message(commands.process_message_personal(user, link, self.send_message))
+                        self.send_message(commands.process_message_personal(user, link, values["message_text"], values["message_sender"], values["message_sender_email"], self.send_message))
                     self.driver.execute_script("window.history.go(-1)")
                     time.sleep(3)
                     break
@@ -100,11 +123,12 @@ class Sola:
                     room = card.find_element_by_class_name("Card__title").get_attribute("innerHTML")
                     link = card.find_element_by_class_name("Card__link").get_attribute("href")
                     card.click()
+                    values = self.get_info()
                     self.select_message_box()
                     if(self.message != None):
                         self.send_message(self.message)
                     else:
-                        self.send_message(commands.process_message_group(room, link, self.send_message))
+                        self.send_message(commands.process_message_group(room, link, values["message_text"], values["message_sender"], values["message_sender_email"], self.send_message))
                     self.driver.execute_script("window.history.go(-1)")
                     time.sleep(3)
                     break
@@ -112,9 +136,10 @@ class Sola:
                     room = card.find_element_by_class_name("Card__title").get_attribute("innerHTML")
                     link = card.find_element_by_class_name("Card__link").get_attribute("href")
                     card.click()
+                    values = self.get_info()
                     self.select_message_box()
-                    if(self.message == None):
-                        self.send_message(commands.process_message_group_no_at(room, link, self.send_message))
+                    if(self.message == None): # ChatMessage__sender
+                        self.send_message(commands.process_message_group_no_at(room, link, values["message_text"], values["message_sender"], values["message_sender_email"], self.send_message))
                     self.driver.execute_script("window.history.go(-1)")
                     time.sleep(3)
                     break
@@ -211,23 +236,23 @@ info = args_handler(sys.argv)
 email = info["email"]
 password = info["password"]
 browser_options = {"browser": info["browser"], "headless": info["headless"]}
-dev = info["dev"]
+dev = info["dev"] if "dev" in info else "0"
 message = info["message"] if "message" in info else None
 
 #Make our bot
 bot = Sola(email, password, browser_options, dev, message)
 
-#while True:
-try:
-    bot.setup()
-    bot.chime_login()
-    bot.find_updates()
-except (KeyboardInterrupt, SystemExit): #Allow users to manually exit
-    quit()
-except:
-    logging.error(traceback.format_exc())
-    try: 
-        bot.driver.quit()
+while True:
+    try:
+        bot.setup()
+        bot.chime_login()
+        bot.find_updates()
+    except (KeyboardInterrupt, SystemExit): #Allow users to manually exit
+        quit()
     except:
-        pass
-    #continue
+        logging.error(traceback.format_exc())
+        try: 
+            bot.driver.quit()
+        except:
+            pass
+        continue

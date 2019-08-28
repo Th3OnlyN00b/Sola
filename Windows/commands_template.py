@@ -14,6 +14,12 @@ import sys
 #           unique ID which you can use to respond to specific groups or people in unique #
 #           ways, or not at all. It can also be used to send links to the conversation    #
 #           through something like text if you choose to set that up.                     #
+#       message_text: the text of the message sent. Not always accurate due to the delay. #
+#           Will hold the value "Unknown" if Sola is not able to determine the message.   #
+#       message_author: The Chime name of the Chime user who sent the message. Will hold  #
+#           the value "Unknown" if Sola is not able to determine who sent the message.    #
+#       message_author_email: The email of the Chime user who send the message. Will hold #
+#           the value "Unknown" if Sola is not able to determine who sent the message.    #
 #       message_sender: this is a function which you can call on a string to have your    #
 #           bot send that message. This is used to respond to async calls, such as calls  #
 #           to AWS Lambda functions.                                                      #
@@ -27,7 +33,7 @@ import sys
 #   Go have fun and enjoy your lunch in peace!                                            #
 ###########################################################################################
 
-def process_message_personal(name, link, message_sender):
+def process_message_personal(name, link, message_text, message_author, message_author_email, message_sender):
     return "This is my out-of-office message to people who DM me!"
 
 ###########################################################################################
@@ -38,7 +44,7 @@ def process_message_personal(name, link, message_sender):
 #   function: process_message_group_no_at()                                               #
 ###########################################################################################
 
-def process_message_group(name, link, message_sender):
+def process_message_group(name, link, message_text, message_author, message_author_email, message_sender):
     return "This is my out-of-office message to groups who @me!"
 
 ###########################################################################################
@@ -52,7 +58,7 @@ def process_message_group(name, link, message_sender):
 #   something that doesn't require a response.                                            #
 ###########################################################################################
 
-def process_message_group_no_at(name, link, message_sender):
+def process_message_group_no_at(name, link, message_text, message_author, message_author_email, message_sender):
     return ""
 
 

@@ -1,3 +1,13 @@
+###########################################################################################
+#   This file is an example for commands.py which both responds to the message sent and   #
+#   sends you a text detailing that you got a message, who it was from, and the content   #
+#   of the message.                                                                       #
+#                                                                                         #
+#   To use this file, change email_user, email_password, and phone_number_email in        #
+#   the text_message() function (lines 112-115). Then, add it to your root folder and     #
+#   name it 'commands.py'                                                                 #
+###########################################################################################
+
 import random
 import re
 import json
@@ -97,22 +107,23 @@ def cleanup_message(msg):
 
 ########### Helper functions here ###################
 def text_message(msg_to_send):
-    print("I'm being called!")
-    gmail_user = 'myemail@myemail.com'
-    gmail_password = 'myP@ssw0rd'
+
+    email_user = 'myemail@myemail.com'
+    email_password = 'myP@ssw0rd'
+    # vtext.com is for verison. Check your carrier here https://en.wikipedia.org/wiki/SMS_gateway
+    phone_number_email = "MyPhoneNumber@vtext.com"
 
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         server.ehlo()
-        server.login(gmail_user, gmail_password)
+        server.login(email_user, email_password)
     except Exception as e:
         print("Could not send email:")
         print(e)
     chunk_size = 100
     msgs = [ msg_to_send[i:i+chunk_size] for i in range(0, len(msg_to_send), chunk_size) ]
     for msg in msgs:
-        # vtext.com is for verison. Check your carrier here https://en.wikipedia.org/wiki/SMS_gateway
-        server.sendmail(gmail_user, "MyPhoneNumber@vtext.com", msg)
+        server.sendmail(email_user, phone_number_email, msg)
         print("sent " + msg)
 
 def quote(msg):

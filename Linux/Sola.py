@@ -42,9 +42,9 @@ class Sola:
     def setup(self):
         # Select correct browser + options
         try:
-            if self.browser_options["browser"] == 'browser=chrome': #Select your browser (Maybe support other browsers in the future?)
+            if self.browser_options["browser"] == 'chrome': #Select your browser (Maybe support other browsers in the future?)
                 options = ChromeOptions()
-                if self.browser_options["headless"] == ('headless='+str(1)): #If headless, become the horseman
+                if self.browser_options["headless"] == (str(1)): #If headless, become the horseman
                     options.add_argument("--headless")
                     options.add_argument("--window-size=1920x1080")
                 print("Creating webdriver...")
@@ -52,7 +52,7 @@ class Sola:
                 print("Webdriver created!")
             else:
                 options = FirefoxOptions()
-                if self.browser_options["headless"] == ('headless='+str(1)): #If headless, become the horseman
+                if self.browser_options["headless"] == (str(1)): #If headless, become the horseman
                     options.headless = True
                 print("Creating webdriver...")
                 self.driver = webdriver.Firefox(options=options)

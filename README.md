@@ -15,13 +15,13 @@ Please note that this assumes you have:
 * If you downloaded a zip file, unzip it and open the folder.
 * This will be referenced as your **root folder**
 
-## 4. Program your bot (Optional):
+## 1. Program your bot (Optional):
 * Download or clone this framework into a file on your local or virtual or cloud machine.
 * Create a file in the root folder for the project called "commands.py"
 * Copy the content from "commands_template.py" into the newly created "commands.py"
 * Modify "commands.py" to your heart's content.
 
-## 6. Run your bot:
+## 2. Run your bot:
 * You will need to add the geckodriver/chromedriver file to your system's path.
   - On Windows, search "path" into the windows search bar. Select "Edit the system environment variables" then "Environment Variables" then double click the line labeled "Path" on the top box. Select "add", then enter the file path to your root folder. Select "Ok" and close the windows.
   - On Unix, simply run `export PATH=$PATH:/path/to/root/folder/.` 
@@ -31,7 +31,7 @@ Please note that this assumes you have:
 * You may be asked to enter a one-time password (especially if you are on a new AWS instance). This happens sometimes, just check the bot's email and enter the code. Sola will handle the rest.
 * You might also be asked to copy a url into your browser and type the resultant captcha. This feature is currently broken. If you see this screen, wait a few hours and try again, the captcha will usually go away. If it doesn't (or you don't want to wait) simply open a browser and login manually from the computer you want to run the bot on. This will remove the captcha flag and you'll be able to run Sola normally. If you can't do that because you're on a slow computer, restart your router/ec2 instance (stop and start, in the latter case), this will give you a new IP and the captcha will go away. Sorry!
 
-## 7. Have fun!
+## 3. Have fun!
 * Your bot should be running now. Enjoy yourself!
 
 ## Notes about running on AWS:

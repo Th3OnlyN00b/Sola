@@ -71,14 +71,14 @@ class Sola:
         try:
             message_list = self.driver.find_element_by_class_name("ChatMessageList.ChatContainer__messagesList").find_element_by_class_name("ChatMessageList__messagesWrapper.ChatMessageList__messagesWrapper--shortReadReceipt")
             try:
-                messages = message_list.find_elements_by_class_name("ChatMessageList__messageContainer")
+                senders = message_list.find_elements_by_class_name("ChatMessage__sender")
                 info["message_sender"] = senders[-1].get_attribute("innerHTML").split("<")[0]
                 info["message_sender_email"] = senders[-1].get_attribute("data-email")
             except:
                 info["message_sender"] = "Unknown"
                 info["message_sender_email"] = "Unknown"
             try:
-                senders = message_list.find_elements_by_class_name("ChatMessage__sender")
+                messages = message_list.find_elements_by_class_name("ChatMessageList__messageContainer")
                 info["message_text"] = messages[-1].find_element_by_class_name("Linkify").get_attribute("innerHTML")
             except:
                 info["message_text"] = "Unknown"

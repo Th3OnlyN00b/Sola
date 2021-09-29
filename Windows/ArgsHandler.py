@@ -20,7 +20,7 @@ def args_handler(arguments):
         
     To launch using the second method, run '{botname} headless=[1|0] browser=[chrome|firefox] bot_name=[bot name] email=[bot login email] pass=[bot login password]'
 
-    botname should be the name the bot has in chime, as it would look if someone were to @ your bot.""".format())
+    botname should be the name the bot has in chime, as it would look if someone were to @ your bot.""")
         quit()
 
     using_pass = True

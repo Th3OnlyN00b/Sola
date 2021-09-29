@@ -13,7 +13,7 @@ def args_handler(arguments):
         1) Using AWS Secrets Manager through boto3
         2) Entering the login info for the bot account manually.
         
-    To launch using the first method, run 'Luna.py headless=[1|0] browser=[chrome|firefox] bot_name=[bot name] secret_name=[secret_name] region=[region]'.
+    To launch using the first method, run 'Sola.py headless=[1|0] browser=[chrome|firefox] bot_name=[bot name] secret_name=[secret_name] region=[region]'.
     Your secret (the one referenced by secret_name) MUST be in the format: 
         email: [bot login email]
         password: [bot login password]
